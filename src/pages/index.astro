@@ -1,0 +1,8 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Desktop } from '../components/Desktop/Desktop';
+---
+
+<Layout title="My Desktop">
+  <Desktop client:only="react" />
+</Layout>

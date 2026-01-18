@@ -1,0 +1,276 @@
+import { useState, useEffect, useRef } from 'react';
+import { AppBar, Toolbar, Button, Separator } from 'react95';
+import styled from 'styled-components';
+import { useWindowManager } from './WindowManager';
+
+const StyledAppBar = styled(AppBar)`
+  top: auto;
+  bottom: 0;
+  position: fixed;
+`;
+
+const StyledToolbar = styled(Toolbar)`
+  justify-content: space-between;
+`;
+
+const LeftSection = styled.div`
+  display: flex;
+  gap: 4px;
+  align-items: center;
+`;
+
+const RightSection = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const StartMenuContainer = styled.div`
+  position: relative;
+`;
+
+const StartMenuWrapper = styled.div`
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 4px;
+  display: flex;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #dfdfdf #808080 #808080 #dfdfdf;
+  box-shadow: 2px 2px 0 0 #000;
+`;
+
+const StartMenuSidebar = styled.div`
+  width: 32px;
+  background: #808080;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 8px;
+`;
+
+const SidebarText = styled.div`
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-weight: bold;
+  font-size: 26px;
+  letter-spacing: 1px;
+  font-family: sans-serif;
+`;
+
+const SidebarWindows = styled.span`
+  color: #c0c0c0;
+`;
+
+const Sidebar95 = styled.span`
+  color: #fff;
+`;
+
+const StartMenuContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 2px 0;
+  min-width: 175px;
+`;
+
+const MenuItem = styled.button<{ $hasSubmenu?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 32px 6px 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: 'ms_sans_serif', sans-serif;
+  font-size: 14px;
+  text-align: left;
+  width: 100%;
+  color: #000;
+  position: relative;
+
+  &:hover {
+    background: #000080;
+    color: #fff;
+  }
+
+  ${({ $hasSubmenu }) =>
+    $hasSubmenu &&
+    `
+    &::after {
+      content: '▶';
+      position: absolute;
+      right: 10px;
+      font-size: 10px;
+    }
+    &:hover::after {
+      color: #fff;
+    }
+  `}
+`;
+
+const MenuIcon = styled.img`
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+`;
+
+const MenuDivider = styled.div`
+  height: 1px;
+  background: #808080;
+  margin: 3px 2px;
+  border-bottom: 1px solid #fff;
+`;
+
+const WindowButton = styled(Button)<{ $active?: boolean }>`
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  ${({ $active }) => $active && 'font-weight: bold;'}
+`;
+
+const ClockContainer = styled.div`
+  border: 1px solid;
+  border-color: #808080 #dfdfdf #dfdfdf #808080;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-family: 'ms_sans_serif', sans-serif;
+  background: #c0c0c0;
+`;
+
+const StartButton = styled(Button)`
+  font-weight: bold;
+  font-size: 14px;
+  font-family: 'ms_sans_serif', sans-serif;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`;
+
+const WindowsLogo = styled.img`
+  width: 20px;
+  height: 20px;
+  image-rendering: pixelated;
+`;
+
+export function TaskBar() {
+  const { windows, focusWindow, restoreWindow, minimizeWindow } = useWindowManager();
+  const [startMenuOpen, setStartMenuOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(
+    new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+  );
+  const startMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(
+        new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+      );
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (startMenuRef.current && !startMenuRef.current.contains(event.target as Node)) {
+        setStartMenuOpen(false);
+      }
+    };
+
+    if (startMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [startMenuOpen]);
+
+  const handleWindowButtonClick = (windowId: string, isMinimized: boolean) => {
+    if (isMinimized) {
+      restoreWindow(windowId);
+    } else {
+      const window = windows.find((w) => w.id === windowId);
+      const maxZ = Math.max(...windows.map((w) => w.zIndex));
+      if (window?.zIndex === maxZ) {
+        minimizeWindow(windowId);
+      } else {
+        focusWindow(windowId);
+      }
+    }
+  };
+
+  return (
+    <StyledAppBar>
+      <StyledToolbar>
+        <LeftSection>
+          <StartMenuContainer ref={startMenuRef}>
+            <StartButton
+              onClick={() => setStartMenuOpen(!startMenuOpen)}
+              active={startMenuOpen}
+            >
+              <WindowsLogo src="/icons/windows-0.png" alt="" />
+              Start
+            </StartButton>
+            {startMenuOpen && (
+              <StartMenuWrapper>
+                <StartMenuSidebar>
+                  <SidebarText>
+                    <SidebarWindows>Windows</SidebarWindows>
+                    <Sidebar95>95</Sidebar95>
+                  </SidebarText>
+                </StartMenuSidebar>
+                <StartMenuContent>
+                  <MenuItem $hasSubmenu>
+                    <MenuIcon src="/icons/directory_program_group.ico" alt="" />
+                    Programs
+                  </MenuItem>
+                  <MenuItem $hasSubmenu>
+                    <MenuIcon src="/icons/directory_open_file_mydocs-0.png" alt="" />
+                    Documents
+                  </MenuItem>
+                  <MenuItem $hasSubmenu>
+                    <MenuIcon src="/icons/settings_gear-0.png" alt="" />
+                    Settings
+                  </MenuItem>
+                  <MenuItem $hasSubmenu>
+                    <MenuIcon src="/icons/winrep_mag_glass.png" alt="" />
+                    Find
+                  </MenuItem>
+                  <MenuItem>
+                    <MenuIcon src="/icons/help_book_big-0.png" alt="" />
+                    Help
+                  </MenuItem>
+                  <MenuItem>
+                    <MenuIcon src="/icons/application_hourglass_small-0.png" alt="" />
+                    Run...
+                  </MenuItem>
+                  <MenuDivider />
+                  <MenuItem>
+                    <MenuIcon src="/icons/shut_down_normal-0.png" alt="" />
+                    Shut Down...
+                  </MenuItem>
+                </StartMenuContent>
+              </StartMenuWrapper>
+            )}
+          </StartMenuContainer>
+          <Separator orientation="vertical" size="40px" />
+          {windows.map((window) => (
+            <WindowButton
+              key={window.id}
+              $active={!window.isMinimized}
+              onClick={() => handleWindowButtonClick(window.id, window.isMinimized)}
+            >
+              {window.title}
+            </WindowButton>
+          ))}
+        </LeftSection>
+        <RightSection>
+          <ClockContainer>{currentTime}</ClockContainer>
+        </RightSection>
+      </StyledToolbar>
+    </StyledAppBar>
+  );
+}
