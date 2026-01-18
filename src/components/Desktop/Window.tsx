@@ -22,19 +22,15 @@ const TitleBarControls = styled.div`
 `;
 
 const TitleBarButton = styled(Button)`
-  padding: 0;
-  width: 20px;
-  height: 20px;
-  min-width: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 12px;
+  padding: 0 !important;
+  min-width: 21px !important;
+  width: 21px !important;
+  height: 18px !important;
 `;
 
 const TitleText = styled.span`
   font-weight: bold;
+  font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -119,11 +115,32 @@ export function Window({ windowState, children }: WindowProps) {
         <StyledWindowHeader className="window-title-bar">
           <TitleText>{title}</TitleText>
           <TitleBarControls>
-            <TitleBarButton onClick={() => minimizeWindow(id)}>_</TitleBarButton>
-            <TitleBarButton onClick={handleMaximizeClick}>
-              {isMaximized ? '❐' : '□'}
+            <TitleBarButton onClick={() => minimizeWindow(id)}>
+              <svg width="8" height="2" style={{ display: 'block', marginTop: '4px' }}>
+                <rect x="0" y="0" width="8" height="2" fill="black" />
+              </svg>
             </TitleBarButton>
-            <TitleBarButton onClick={() => closeWindow(id)}>×</TitleBarButton>
+            <TitleBarButton onClick={handleMaximizeClick}>
+              {isMaximized ? (
+                <svg width="10" height="10" style={{ display: 'block' }}>
+                  <rect x="2" y="0" width="8" height="8" fill="none" stroke="black" strokeWidth="1" />
+                  <line x1="2" y1="1" x2="10" y2="1" stroke="black" strokeWidth="1" />
+                  <rect x="0" y="2" width="8" height="8" fill="#c0c0c0" stroke="black" strokeWidth="1" />
+                  <line x1="0" y1="3" x2="8" y2="3" stroke="black" strokeWidth="1" />
+                </svg>
+              ) : (
+                <svg width="10" height="8" style={{ display: 'block' }}>
+                  <rect x="0" y="0" width="10" height="8" fill="none" stroke="black" strokeWidth="1" />
+                  <line x1="0" y1="1" x2="10" y2="1" stroke="black" strokeWidth="1" />
+                </svg>
+              )}
+            </TitleBarButton>
+            <TitleBarButton onClick={() => closeWindow(id)}>
+              <svg width="8" height="8" style={{ display: 'block' }}>
+                <line x1="0" y1="0" x2="8" y2="8" stroke="black" strokeWidth="1.5" />
+                <line x1="8" y1="0" x2="0" y2="8" stroke="black" strokeWidth="1.5" />
+              </svg>
+            </TitleBarButton>
           </TitleBarControls>
         </StyledWindowHeader>
         <StyledWindowContent>{children}</StyledWindowContent>

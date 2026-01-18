@@ -9,6 +9,7 @@ import { TaskBar } from './TaskBar';
 import { DesktopIcon } from './DesktopIcon';
 import { AboutMe } from '../windows/AboutMe';
 import type { WindowState } from './types';
+import userCardIcon from '../../assets/icons/user_card.png';
 
 const GlobalStyles = createGlobalStyle`
   ${styleReset}
@@ -91,9 +92,9 @@ function DesktopContent() {
       id: 'about-me',
       title: 'About Me',
       icon: '👤',
-      position: { x: 100, y: 50 },
-      size: { width: 450, height: 400 },
-      minSize: { width: 300, height: 250 },
+      position: { x: 100, y: 30 },
+      size: { width: 500, height: 520 },
+      minSize: { width: 350, height: 300 },
       isMinimized: false,
       isMaximized: false,
     };
@@ -105,7 +106,7 @@ function DesktopContent() {
       <DesktopArea>
         <IconGrid>
           <DesktopIcon
-            icon="/icons/user_card.png"
+            icon={userCardIcon.src}
             label="About Me"
             onDoubleClick={handleOpenAboutMe}
           />

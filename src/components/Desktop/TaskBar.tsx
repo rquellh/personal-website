@@ -3,6 +3,16 @@ import { AppBar, Toolbar, Button, Separator } from 'react95';
 import styled from 'styled-components';
 import { useWindowManager } from './WindowManager';
 
+// Icon imports
+import windowsIcon from '../../assets/icons/windows-0.png';
+import programsIcon from '../../assets/icons/directory_program_group.png';
+import documentsIcon from '../../assets/icons/directory_open_file_mydocs-0.png';
+import settingsIcon from '../../assets/icons/settings_gear-0.png';
+import findIcon from '../../assets/icons/winrep_mag_glass.png';
+import helpIcon from '../../assets/icons/help_book_big-0.png';
+import runIcon from '../../assets/icons/application_hourglass_small-0.png';
+import shutdownIcon from '../../assets/icons/shut_down_normal-0.png';
+
 const StyledAppBar = styled(AppBar)`
   top: auto;
   bottom: 0;
@@ -127,6 +137,7 @@ const WindowButton = styled(Button)<{ $active?: boolean }>`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 14px;
   ${({ $active }) => $active && 'font-weight: bold;'}
 `;
 
@@ -211,7 +222,7 @@ export function TaskBar() {
               onClick={() => setStartMenuOpen(!startMenuOpen)}
               active={startMenuOpen}
             >
-              <WindowsLogo src="/icons/windows-0.png" alt="" />
+              <WindowsLogo src={windowsIcon.src} alt="" />
               Start
             </StartButton>
             {startMenuOpen && (
@@ -224,32 +235,32 @@ export function TaskBar() {
                 </StartMenuSidebar>
                 <StartMenuContent>
                   <MenuItem $hasSubmenu>
-                    <MenuIcon src="/icons/directory_program_group.ico" alt="" />
+                    <MenuIcon src={programsIcon.src} alt="" />
                     Programs
                   </MenuItem>
                   <MenuItem $hasSubmenu>
-                    <MenuIcon src="/icons/directory_open_file_mydocs-0.png" alt="" />
+                    <MenuIcon src={documentsIcon.src} alt="" />
                     Documents
                   </MenuItem>
                   <MenuItem $hasSubmenu>
-                    <MenuIcon src="/icons/settings_gear-0.png" alt="" />
+                    <MenuIcon src={settingsIcon.src} alt="" />
                     Settings
                   </MenuItem>
                   <MenuItem $hasSubmenu>
-                    <MenuIcon src="/icons/winrep_mag_glass.png" alt="" />
+                    <MenuIcon src={findIcon.src} alt="" />
                     Find
                   </MenuItem>
                   <MenuItem>
-                    <MenuIcon src="/icons/help_book_big-0.png" alt="" />
+                    <MenuIcon src={helpIcon.src} alt="" />
                     Help
                   </MenuItem>
                   <MenuItem>
-                    <MenuIcon src="/icons/application_hourglass_small-0.png" alt="" />
+                    <MenuIcon src={runIcon.src} alt="" />
                     Run...
                   </MenuItem>
                   <MenuDivider />
                   <MenuItem>
-                    <MenuIcon src="/icons/shut_down_normal-0.png" alt="" />
+                    <MenuIcon src={shutdownIcon.src} alt="" />
                     Shut Down...
                   </MenuItem>
                 </StartMenuContent>
