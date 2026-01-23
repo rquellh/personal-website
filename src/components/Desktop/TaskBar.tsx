@@ -14,6 +14,7 @@ import helpIcon from '../../assets/icons/help_book_big-0.png';
 import runIcon from '../../assets/icons/application_hourglass_small-0.png';
 import shutdownIcon from '../../assets/icons/shut_down_normal-0.png';
 import napsterIcon from '../../assets/icons/napster.png';
+import ieIcon from '../../assets/icons/internet_explorer.webp';
 
 const StyledAppBar = styled(AppBar)`
   top: auto;
@@ -163,7 +164,7 @@ const SubmenuContent = styled.div`
   display: flex;
   flex-direction: column;
   padding: 2px 0;
-  min-width: 150px;
+  min-width: 180px;
 `;
 
 const MenuItemWrapper = styled.div`
@@ -207,7 +208,11 @@ const WindowsLogo = styled.img`
   image-rendering: pixelated;
 `;
 
-export function TaskBar() {
+interface TaskBarProps {
+  onOpenIE?: () => void;
+}
+
+export function TaskBar({ onOpenIE }: TaskBarProps) {
   const { windows, focusWindow, restoreWindow, minimizeWindow, openWindow } = useWindowManager();
   const [startMenuOpen, setStartMenuOpen] = useState(false);
   const [programsSubmenuOpen, setProgramsSubmenuOpen] = useState(false);
@@ -228,6 +233,12 @@ export function TaskBar() {
       isMaximized: false,
     };
     openWindow(windowConfig);
+    setStartMenuOpen(false);
+    setProgramsSubmenuOpen(false);
+  };
+
+  const handleOpenIE = () => {
+    onOpenIE?.();
     setStartMenuOpen(false);
     setProgramsSubmenuOpen(false);
   };
@@ -303,6 +314,10 @@ export function TaskBar() {
                     {programsSubmenuOpen && (
                       <SubmenuWrapper>
                         <SubmenuContent>
+                          <MenuItem onClick={handleOpenIE}>
+                            <MenuIcon src={ieIcon.src} alt="" $small />
+                            Internet Explorer
+                          </MenuItem>
                           <MenuItem onClick={handleOpenNapster}>
                             <MenuIcon src={napsterIcon.src} alt="" $small />
                             Napster
