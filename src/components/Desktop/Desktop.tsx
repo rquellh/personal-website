@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import original from 'react95/dist/themes/original';
 import { styleReset } from 'react95';
@@ -7,10 +8,12 @@ import { WindowManagerProvider, useWindowManager } from './WindowManager';
 import { Window } from './Window';
 import { TaskBar } from './TaskBar';
 import { DesktopIcon } from './DesktopIcon';
+import { ErrorDialog } from './ErrorDialog';
 import { AboutMe } from '../windows/AboutMe';
 import Napster from '../windows/Napster';
 import type { WindowState } from './types';
 import userCardIcon from '../../assets/icons/user_card.png';
+import ieIcon from '../../assets/icons/internet_explorer.webp';
 
 const GlobalStyles = createGlobalStyle`
   ${styleReset}
@@ -88,6 +91,7 @@ const windowContent: Record<string, React.ComponentType> = {
 
 function DesktopContent() {
   const { windows, openWindow } = useWindowManager();
+  const [showIEError, setShowIEError] = useState(false);
 
   const handleOpenAboutMe = () => {
     const windowConfig: Omit<WindowState, 'zIndex'> = {
@@ -103,6 +107,10 @@ function DesktopContent() {
     openWindow(windowConfig);
   };
 
+  const handleOpenIE = () => {
+    setShowIEError(true);
+  };
+
   return (
     <DesktopContainer>
       <DesktopArea>
@@ -111,6 +119,11 @@ function DesktopContent() {
             icon={userCardIcon.src}
             label="About Me"
             onDoubleClick={handleOpenAboutMe}
+          />
+          <DesktopIcon
+            icon={ieIcon.src}
+            label="Internet Explorer"
+            onDoubleClick={handleOpenIE}
           />
         </IconGrid>
         <WindowContainer>
@@ -125,7 +138,15 @@ function DesktopContent() {
           })}
         </WindowContainer>
       </DesktopArea>
-      <TaskBar />
+      <TaskBar onOpenIE={handleOpenIE} />
+      <ErrorDialog
+        isOpen={showIEError}
+        onClose={() => setShowIEError(false)}
+        title="Setup"
+        message="This program has performed an illegal operation and will be shut down.
+
+If the problem persists, contact the program vendor."
+      />
     </DesktopContainer>
   );
 }
