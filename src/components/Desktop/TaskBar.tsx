@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { AppBar, Toolbar, Button, Separator } from 'react95';
 import styled from 'styled-components';
 import { useWindowManager } from './WindowManager';
+import type { WindowState } from './types';
 
 // Icon imports
 import windowsIcon from '../../assets/icons/windows-0.png';
@@ -12,6 +13,7 @@ import findIcon from '../../assets/icons/winrep_mag_glass.png';
 import helpIcon from '../../assets/icons/help_book_big-0.png';
 import runIcon from '../../assets/icons/application_hourglass_small-0.png';
 import shutdownIcon from '../../assets/icons/shut_down_normal-0.png';
+import napsterIcon from '../../assets/icons/napster.png';
 
 const StyledAppBar = styled(AppBar)`
   top: auto;
@@ -32,6 +34,19 @@ const LeftSection = styled.div`
 const RightSection = styled.div`
   display: flex;
   align-items: center;
+`;
+
+const SystemTrayIcon = styled.img`
+  width: 18px;
+  height: 18px;
+  image-rendering: pixelated;
+  cursor: pointer;
+  margin-right: 8px;
+  display: block;
+
+  &:hover {
+    opacity: 0.8;
+  }
 `;
 
 const StartMenuContainer = styled.div`
@@ -118,9 +133,9 @@ const MenuItem = styled.button<{ $hasSubmenu?: boolean }>`
   `}
 `;
 
-const MenuIcon = styled.img`
-  width: 32px;
-  height: 32px;
+const MenuIcon = styled.img<{ $small?: boolean }>`
+  width: ${props => props.$small ? '18px' : '32px'};
+  height: ${props => props.$small ? '18px' : '32px'};
   image-rendering: pixelated;
   flex-shrink: 0;
 `;
@@ -130,6 +145,29 @@ const MenuDivider = styled.div`
   background: #808080;
   margin: 3px 2px;
   border-bottom: 1px solid #fff;
+`;
+
+const SubmenuWrapper = styled.div`
+  position: absolute;
+  left: 100%;
+  top: -2px;
+  margin-left: 2px;
+  display: flex;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #dfdfdf #808080 #808080 #dfdfdf;
+  box-shadow: 2px 2px 0 0 #000;
+`;
+
+const SubmenuContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 2px 0;
+  min-width: 150px;
+`;
+
+const MenuItemWrapper = styled.div`
+  position: relative;
 `;
 
 const WindowButton = styled(Button)<{ $active?: boolean }>`
@@ -148,6 +186,9 @@ const ClockContainer = styled.div`
   font-size: 14px;
   font-family: 'ms_sans_serif', sans-serif;
   background: #c0c0c0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 const StartButton = styled(Button)`
@@ -167,12 +208,29 @@ const WindowsLogo = styled.img`
 `;
 
 export function TaskBar() {
-  const { windows, focusWindow, restoreWindow, minimizeWindow } = useWindowManager();
+  const { windows, focusWindow, restoreWindow, minimizeWindow, openWindow } = useWindowManager();
   const [startMenuOpen, setStartMenuOpen] = useState(false);
+  const [programsSubmenuOpen, setProgramsSubmenuOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(
     new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
   );
   const startMenuRef = useRef<HTMLDivElement>(null);
+
+  const handleOpenNapster = () => {
+    const windowConfig: Omit<WindowState, 'zIndex'> = {
+      id: 'napster',
+      title: 'Napster v2.0 BETA 7',
+      icon: napsterIcon.src,
+      position: { x: 150, y: 80 },
+      size: { width: 640, height: 480 },
+      minSize: { width: 500, height: 400 },
+      isMinimized: false,
+      isMaximized: false,
+    };
+    openWindow(windowConfig);
+    setStartMenuOpen(false);
+    setProgramsSubmenuOpen(false);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -234,10 +292,25 @@ export function TaskBar() {
                   </SidebarText>
                 </StartMenuSidebar>
                 <StartMenuContent>
-                  <MenuItem $hasSubmenu>
-                    <MenuIcon src={programsIcon.src} alt="" />
-                    Programs
-                  </MenuItem>
+                  <MenuItemWrapper
+                    onMouseEnter={() => setProgramsSubmenuOpen(true)}
+                    onMouseLeave={() => setProgramsSubmenuOpen(false)}
+                  >
+                    <MenuItem $hasSubmenu>
+                      <MenuIcon src={programsIcon.src} alt="" />
+                      Programs
+                    </MenuItem>
+                    {programsSubmenuOpen && (
+                      <SubmenuWrapper>
+                        <SubmenuContent>
+                          <MenuItem onClick={handleOpenNapster}>
+                            <MenuIcon src={napsterIcon.src} alt="" $small />
+                            Napster
+                          </MenuItem>
+                        </SubmenuContent>
+                      </SubmenuWrapper>
+                    )}
+                  </MenuItemWrapper>
                   <MenuItem $hasSubmenu>
                     <MenuIcon src={documentsIcon.src} alt="" />
                     Documents
@@ -279,7 +352,15 @@ export function TaskBar() {
           ))}
         </LeftSection>
         <RightSection>
-          <ClockContainer>{currentTime}</ClockContainer>
+          <ClockContainer>
+            <SystemTrayIcon
+              src={napsterIcon.src}
+              alt="Napster"
+              onClick={handleOpenNapster}
+              title="Napster"
+            />
+            {currentTime}
+          </ClockContainer>
         </RightSection>
       </StyledToolbar>
     </StyledAppBar>

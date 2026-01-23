@@ -34,11 +34,23 @@ const TitleText = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
+
+const TitleIcon = styled.img`
+  width: 20px;
+  height: 20px;
+  image-rendering: pixelated;
+  display: block;
+  margin-top: -2px;
 `;
 
 const StyledWindowContent = styled(WindowContent)`
   overflow: auto;
   height: calc(100% - 33px);
+  padding: 0 !important;
 `;
 
 interface WindowProps {
@@ -57,7 +69,7 @@ export function Window({ windowState, children }: WindowProps) {
     updateWindowSize,
   } = useWindowManager();
 
-  const { id, title, position, size, minSize, isMinimized, isMaximized, zIndex } = windowState;
+  const { id, title, icon, position, size, minSize, isMinimized, isMaximized, zIndex } = windowState;
 
   if (isMinimized) {
     return null;
@@ -113,7 +125,10 @@ export function Window({ windowState, children }: WindowProps) {
     >
       <Win95Window style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
         <StyledWindowHeader className="window-title-bar">
-          <TitleText>{title}</TitleText>
+          <TitleText>
+            {icon && <TitleIcon src={icon} alt="" />}
+            {title}
+          </TitleText>
           <TitleBarControls>
             <TitleBarButton onClick={() => minimizeWindow(id)}>
               <svg width="8" height="2" style={{ display: 'block', marginTop: '4px' }}>
