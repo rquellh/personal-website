@@ -8,6 +8,7 @@ import { Window } from './Window';
 import { TaskBar } from './TaskBar';
 import { DesktopIcon } from './DesktopIcon';
 import { AboutMe } from '../windows/AboutMe';
+import Napster from '../windows/Napster';
 import type { WindowState } from './types';
 import userCardIcon from '../../assets/icons/user_card.png';
 
@@ -82,6 +83,7 @@ const WindowContainer = styled.div`
 // Window content registry
 const windowContent: Record<string, React.ComponentType> = {
   'about-me': AboutMe,
+  'napster': Napster,
 };
 
 function DesktopContent() {
@@ -91,7 +93,7 @@ function DesktopContent() {
     const windowConfig: Omit<WindowState, 'zIndex'> = {
       id: 'about-me',
       title: 'About Me',
-      icon: '👤',
+      icon: userCardIcon.src,
       position: { x: 100, y: 30 },
       size: { width: 500, height: 520 },
       minSize: { width: 350, height: 300 },
