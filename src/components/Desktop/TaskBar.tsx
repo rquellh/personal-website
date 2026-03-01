@@ -15,6 +15,9 @@ import runIcon from '../../assets/icons/application_hourglass_small-0.png';
 import shutdownIcon from '../../assets/icons/shut_down_normal-0.png';
 import napsterIcon from '../../assets/icons/napster.png';
 import ieIcon from '../../assets/icons/internet_explorer.webp';
+import folderIcon from '../../assets/icons/directory_closed_cool-0.png';
+import rctIcon from '../../assets/icons/rtc.ico';
+import pinballIcon from '../../assets/icons/pinball.png';
 
 const StyledAppBar = styled(AppBar)`
   top: auto;
@@ -216,6 +219,7 @@ export function TaskBar({ onOpenIE }: TaskBarProps) {
   const { windows, focusWindow, restoreWindow, minimizeWindow, openWindow } = useWindowManager();
   const [startMenuOpen, setStartMenuOpen] = useState(false);
   const [programsSubmenuOpen, setProgramsSubmenuOpen] = useState(false);
+  const [documentsSubmenuOpen, setDocumentsSubmenuOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(
     new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
   );
@@ -235,6 +239,54 @@ export function TaskBar({ onOpenIE }: TaskBarProps) {
     openWindow(windowConfig);
     setStartMenuOpen(false);
     setProgramsSubmenuOpen(false);
+  };
+
+  const handleOpenRCT = () => {
+    const windowConfig: Omit<WindowState, 'zIndex'> = {
+      id: 'roller-coaster-tycoon',
+      title: 'RollerCoaster Tycoon',
+      icon: rctIcon,
+      position: { x: 140, y: 60 },
+      size: { width: 640, height: 480 },
+      minSize: { width: 400, height: 300 },
+      isMinimized: false,
+      isMaximized: false,
+    };
+    openWindow(windowConfig);
+    setStartMenuOpen(false);
+    setProgramsSubmenuOpen(false);
+  };
+
+  const handleOpenPinball = () => {
+    const windowConfig: Omit<WindowState, 'zIndex'> = {
+      id: 'pinball',
+      title: '3D Pinball for Windows - Space Cadet',
+      icon: pinballIcon.src,
+      position: { x: 160, y: 40 },
+      size: { width: 640, height: 500 },
+      minSize: { width: 500, height: 400 },
+      isMinimized: false,
+      isMaximized: false,
+    };
+    openWindow(windowConfig);
+    setStartMenuOpen(false);
+    setProgramsSubmenuOpen(false);
+  };
+
+  const handleOpenFunStuff = () => {
+    const windowConfig: Omit<WindowState, 'zIndex'> = {
+      id: 'fun-stuff',
+      title: 'Fun Stuff',
+      icon: folderIcon.src,
+      position: { x: 120, y: 50 },
+      size: { width: 500, height: 350 },
+      minSize: { width: 350, height: 250 },
+      isMinimized: false,
+      isMaximized: false,
+    };
+    openWindow(windowConfig);
+    setStartMenuOpen(false);
+    setDocumentsSubmenuOpen(false);
   };
 
   const handleOpenIE = () => {
@@ -322,14 +374,37 @@ export function TaskBar({ onOpenIE }: TaskBarProps) {
                             <MenuIcon src={napsterIcon.src} alt="" $small />
                             Napster
                           </MenuItem>
+                          <MenuItem onClick={handleOpenRCT}>
+                            <MenuIcon src={rctIcon} alt="" $small />
+                            RollerCoaster Tycoon
+                          </MenuItem>
+                          <MenuItem onClick={handleOpenPinball}>
+                            <MenuIcon src={pinballIcon.src} alt="" $small />
+                            3D Pinball
+                          </MenuItem>
                         </SubmenuContent>
                       </SubmenuWrapper>
                     )}
                   </MenuItemWrapper>
-                  <MenuItem $hasSubmenu>
-                    <MenuIcon src={documentsIcon.src} alt="" />
-                    Documents
-                  </MenuItem>
+                  <MenuItemWrapper
+                    onMouseEnter={() => setDocumentsSubmenuOpen(true)}
+                    onMouseLeave={() => setDocumentsSubmenuOpen(false)}
+                  >
+                    <MenuItem $hasSubmenu>
+                      <MenuIcon src={documentsIcon.src} alt="" />
+                      Documents
+                    </MenuItem>
+                    {documentsSubmenuOpen && (
+                      <SubmenuWrapper>
+                        <SubmenuContent>
+                          <MenuItem onClick={handleOpenFunStuff}>
+                            <MenuIcon src={folderIcon.src} alt="" $small />
+                            Fun Stuff
+                          </MenuItem>
+                        </SubmenuContent>
+                      </SubmenuWrapper>
+                    )}
+                  </MenuItemWrapper>
                   <MenuItem $hasSubmenu>
                     <MenuIcon src={settingsIcon.src} alt="" />
                     Settings

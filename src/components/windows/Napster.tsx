@@ -715,6 +715,9 @@ const Napster: React.FC = () => {
           </Placeholder>
         )}
       </TabContent>
+      <StatusBar style={{ justifyContent: 'center', color: '#cc0000' }}>
+        This is not real Napster. No files are actually being shared or downloaded.
+      </StatusBar>
     </NapsterContainer>
   );
 };
