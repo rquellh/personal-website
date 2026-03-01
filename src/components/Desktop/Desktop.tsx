@@ -11,9 +11,16 @@ import { DesktopIcon } from './DesktopIcon';
 import { ErrorDialog } from './ErrorDialog';
 import { AboutMe } from '../windows/AboutMe';
 import Napster from '../windows/Napster';
+import { FunStuff } from '../windows/FunStuff';
+import { VideoPlayer } from '../windows/VideoPlayer';
+import { RollerCoasterTycoon } from '../windows/RollerCoasterTycoon';
+import { Pinball } from '../windows/Pinball';
 import type { WindowState } from './types';
 import userCardIcon from '../../assets/icons/user_card.png';
 import ieIcon from '../../assets/icons/internet_explorer.webp';
+const BuddyHollyVideo = () => <VideoPlayer videoId="kemivUKb4f4" title="Buddy Holly - Weezer" />;
+const GoodTimesVideo = () => <VideoPlayer videoId="iqL1BLzn3qc" title="Good Times - Edie Brickell" />;
+const WelcomeVideo = () => <VideoPlayer videoId="7ob7EEr3t8k" title="Welcome" />;
 
 const GlobalStyles = createGlobalStyle`
   ${styleReset}
@@ -87,6 +94,12 @@ const WindowContainer = styled.div`
 const windowContent: Record<string, React.ComponentType> = {
   'about-me': AboutMe,
   'napster': Napster,
+  'fun-stuff': FunStuff,
+  'video-buddy-holly': BuddyHollyVideo,
+  'video-good-times': GoodTimesVideo,
+  'video-welcome': WelcomeVideo,
+  'roller-coaster-tycoon': RollerCoasterTycoon,
+  'pinball': Pinball,
 };
 
 function DesktopContent() {
@@ -119,11 +132,6 @@ function DesktopContent() {
             icon={userCardIcon.src}
             label="About Me"
             onDoubleClick={handleOpenAboutMe}
-          />
-          <DesktopIcon
-            icon={ieIcon.src}
-            label="Internet Explorer"
-            onDoubleClick={handleOpenIE}
           />
         </IconGrid>
         <WindowContainer>
