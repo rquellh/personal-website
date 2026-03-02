@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider, StyleSheetManager } from 'styled-components';
+import isPropValid from '@emotion/is-prop-valid';
 import original from 'react95/dist/themes/original';
 import { styleReset } from 'react95';
 import { createGlobalStyle } from 'styled-components';
@@ -159,13 +160,33 @@ If the problem persists, contact the program vendor."
   );
 }
 
+// Props used internally by react95 that shouldn't be forwarded to the DOM
+const REACT95_PROPS = new Set([
+  'active',
+  'fixed',
+  'position',
+  'noPadding',
+  'fullWidth',
+  'primary',
+  'square',
+  'variant',
+  'shadow',
+]);
+
+function shouldForwardProp(prop: string) {
+  if (REACT95_PROPS.has(prop)) return false;
+  return isPropValid(prop);
+}
+
 export function Desktop() {
   return (
-    <ThemeProvider theme={original}>
-      <GlobalStyles />
-      <WindowManagerProvider>
-        <DesktopContent />
-      </WindowManagerProvider>
-    </ThemeProvider>
+    <StyleSheetManager shouldForwardProp={shouldForwardProp}>
+      <ThemeProvider theme={original}>
+        <GlobalStyles />
+        <WindowManagerProvider>
+          <DesktopContent />
+        </WindowManagerProvider>
+      </ThemeProvider>
+    </StyleSheetManager>
   );
 }
