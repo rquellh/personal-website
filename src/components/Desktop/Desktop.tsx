@@ -16,6 +16,7 @@ import { FunStuff } from '../windows/FunStuff';
 import { VideoPlayer } from '../windows/VideoPlayer';
 import { RollerCoasterTycoon } from '../windows/RollerCoasterTycoon';
 import { Pinball } from '../windows/Pinball';
+import { OregonTrail } from '../windows/OregonTrail';
 import type { WindowState } from './types';
 import userCardIcon from '../../assets/icons/user_card.png';
 import ieIcon from '../../assets/icons/internet_explorer.webp';
@@ -101,6 +102,7 @@ const windowContent: Record<string, React.ComponentType> = {
   'video-welcome': WelcomeVideo,
   'roller-coaster-tycoon': RollerCoasterTycoon,
   'pinball': Pinball,
+  'oregon-trail': OregonTrail,
 };
 
 function DesktopContent() {
