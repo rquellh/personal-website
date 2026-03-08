@@ -18,6 +18,7 @@ import ieIcon from '../../assets/icons/internet_explorer.webp';
 import folderIcon from '../../assets/icons/directory_closed_cool-0.png';
 import rctIcon from '../../assets/icons/rtc.ico';
 import pinballIcon from '../../assets/icons/pinball.png';
+import oregonTrailIcon from '../../assets/icons/oregon_trail.ico';
 
 const StyledAppBar = styled(AppBar)`
   top: auto;
@@ -273,6 +274,22 @@ export function TaskBar({ onOpenIE }: TaskBarProps) {
     setProgramsSubmenuOpen(false);
   };
 
+  const handleOpenOregonTrail = () => {
+    const windowConfig: Omit<WindowState, 'zIndex'> = {
+      id: 'oregon-trail',
+      title: 'The Oregon Trail',
+      icon: oregonTrailIcon,
+      position: { x: 180, y: 50 },
+      size: { width: 640, height: 480 },
+      minSize: { width: 500, height: 400 },
+      isMinimized: false,
+      isMaximized: false,
+    };
+    openWindow(windowConfig);
+    setStartMenuOpen(false);
+    setProgramsSubmenuOpen(false);
+  };
+
   const handleOpenFunStuff = () => {
     const windowConfig: Omit<WindowState, 'zIndex'> = {
       id: 'fun-stuff',
@@ -381,6 +398,10 @@ export function TaskBar({ onOpenIE }: TaskBarProps) {
                           <MenuItem onClick={handleOpenPinball}>
                             <MenuIcon src={pinballIcon.src} alt="" $small />
                             3D Pinball
+                          </MenuItem>
+                          <MenuItem onClick={handleOpenOregonTrail}>
+                            <MenuIcon src={oregonTrailIcon} alt="" $small />
+                            The Oregon Trail
                           </MenuItem>
                         </SubmenuContent>
                       </SubmenuWrapper>
