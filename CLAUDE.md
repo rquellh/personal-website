@@ -11,8 +11,10 @@ A personal portfolio website themed as a Windows 95 desktop experience, built wi
 - **Dev server**: `npm run dev` (runs on localhost:4321)
 - **Build**: `npm run build` (outputs static files to `/dist/`)
 - **Preview build**: `npm run preview`
+- **Run tests**: `npm test` (single run via Vitest)
+- **Watch tests**: `npm run test:watch` (Vitest in watch mode)
 
-No linting or testing frameworks are configured.
+Tests use Vitest + Testing Library + jsdom. Test files are co-located with source files using `*.test.tsx` naming. Test utilities and providers live in `src/test/`.
 
 ## Architecture
 
